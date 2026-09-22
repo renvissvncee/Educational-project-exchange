@@ -1,4 +1,4 @@
-from models import Project, Student
+from models import Booking, Project, Student
 from project_data import load_projects, save_projects
 from project_logic import (
     add_project,
@@ -109,6 +109,22 @@ def test_student_has_object_api() -> None:
     assert student.id == 1
     assert student.name == "Анна"
     assert str(student) == "Анна"
+
+
+def test_booking_links_project_and_student() -> None:
+    project = Project(name="Биржа")
+    student = Student(name="Анна")
+    booking = Booking(1, project, "2026-09-22", student)
+
+    assert booking.project is project
+    assert booking.student is student
+    assert booking.is_cancelled is False
+    assert "активно" in str(booking)
+
+    booking.cancel()
+
+    assert booking.is_cancelled is True
+    assert "отменено" in str(booking)
 
 
 def test_project_can_be_created_from_data() -> None:
