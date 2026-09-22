@@ -1,3 +1,4 @@
+from models import Project, Student
 from project_data import DATA_FILE, load_projects, save_projects
 from project_logic import (
     add_project,
@@ -10,7 +11,7 @@ from project_logic import (
 )
 
 
-def show_projects(projects: list[dict[str, object]]) -> None:
+def show_projects(projects: list[Project]) -> None:
     """Показывает проекты, которые можно разместить на бирже."""
     available_projects = get_available_projects(projects)
     if not available_projects:
@@ -21,34 +22,35 @@ def show_projects(projects: list[dict[str, object]]) -> None:
         print_project(project)
 
 
-def show_all_projects(projects: list[dict[str, object]]) -> None:
+def show_all_projects(projects: list[Project]) -> None:
     """Показывает все проекты из коллекции."""
     if not projects:
         print("Проектов нет")
         return
     for project in projects:
-        print("ID:", project.get("id", "Не указан"))
+        print("ID:", project.id)
         print_project(project)
 
 
-def add_project_from_input(projects: list[dict[str, object]]) -> None:
+def add_project_from_input(projects: list[Project]) -> None:
     """Получает данные из меню и добавляет новый проект."""
     try:
-        student = input("Студент: ").strip()
+        student_name = input("Студент: ").strip()
         name = input("Название проекта: ").strip()
         participants = int(input("Количество участников: "))
-        if not student or not name or participants < 0:
+        if not student_name or not name or participants < 0:
             raise ValueError
     except (ValueError, EOFError):
         print("Ошибка: проверьте введенные данные")
         return
 
+    student = Student(name=student_name)
     project = add_project(projects, student, name, participants)
     save_projects(DATA_FILE, projects)
-    print("Проект добавлен, ID:", project["id"])
+    print("Проект добавлен, ID:", project.id)
 
 
-def find_projects_from_input(projects: list[dict[str, object]]) -> None:
+def find_projects_from_input(projects: list[Project]) -> None:
     """Ищет и показывает проекты по введенному названию."""
     try:
         query = input("Введите название для поиска: ").strip()
@@ -61,11 +63,11 @@ def find_projects_from_input(projects: list[dict[str, object]]) -> None:
         print("Проекты не найдены")
         return
     for project in matches:
-        print("ID:", project.get("id", "Не указан"))
+        print("ID:", project.id)
         print_project(project)
 
 
-def delete_project_from_input(projects: list[dict[str, object]]) -> None:
+def delete_project_from_input(projects: list[Project]) -> None:
     """Удаляет проект по ID, введенному пользователем."""
     try:
         project_id = int(input("Введите ID проекта: "))
@@ -80,7 +82,7 @@ def delete_project_from_input(projects: list[dict[str, object]]) -> None:
         print("Проект с таким ID не найден")
 
 
-def show_statistics(projects: list[dict[str, object]]) -> None:
+def show_statistics(projects: list[Project]) -> None:
     """Показывает статистику по проектам."""
     statistics = get_statistics(projects)
     print("Всего проектов:", statistics["total"])
@@ -88,7 +90,7 @@ def show_statistics(projects: list[dict[str, object]]) -> None:
     print("Недоступных для публикации:", statistics["unavailable"])
 
 
-def run_menu(projects: list[dict[str, object]]) -> None:
+def run_menu(projects: list[Project]) -> None:
     """Запускает простое меню работы с учебными проектами."""
     while True:
         print("\n1 - Показать проекты")
