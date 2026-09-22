@@ -20,7 +20,8 @@
 models/
 ├── __init__.py         экспорт Project и Student
 ├── projects.py         класс Project и функции работы с коллекцией
-├── bookings.py         класс Booking
+├── requests.py         класс Request
+├── teams.py            класс Team
 └── students.py         класс Student
 main.py                 запуск и меню
 project_logic.py        публичный импорт функций логики
@@ -33,9 +34,12 @@ tests/test_project.py   тесты объектной модели
 
 `Student` представляет студента и хранит `id` и `name`.
 
-`Booking` представляет бронирование проекта студентом. Он хранит ссылки на
-объекты `Project` и `Student`, дату бронирования и признак отмены. Метод
-`cancel()` отменяет бронирование без удаления объекта из коллекции.
+`Team` представляет команду студентов и хранит список объектов `Student`.
+Метод `add_member()` добавляет участника.
+
+`Request` представляет заявку команды на учебный проект. Она хранит ссылки на
+объекты `Project` и `Team`, дату заявки и признак отмены. Метод `cancel()`
+отменяет заявку без удаления объекта из коллекции.
 
 `Project` представляет учебный проект. Его атрибуты: `id`, `student`, `name`,
 `participants`, `ready` и `publication_date`. Поле `student` содержит объект
@@ -45,8 +49,8 @@ tests/test_project.py   тесты объектной модели
 Связи объектной модели:
 
 ```text
-Booking -> Project
-Booking -> Student
+Request -> Project
+Request -> Team -> Student
 ```
 
 Функции работы с коллекцией находятся в `models/projects.py`, а JSON остаётся

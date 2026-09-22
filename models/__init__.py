@@ -1,5 +1,6 @@
-from .bookings import Booking
 from .students import Student
 from .projects import Project
+from .requests import Request
+from .teams import Team
 
-__all__ = ["Booking", "Project", "Student"]
+__all__ = ["Project", "Request", "Student", "Team"]
